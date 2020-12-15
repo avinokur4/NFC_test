@@ -34,3 +34,4 @@ res/
 local.properties
 *.iml
 index.android.bundle
+.vscode/launch.json

@@ -1,44 +1,20 @@
-import React from 'react';
 import {
   createSwitchNavigator,
   createAppContainer,
 } from 'react-navigation';
-import { Image } from 'react-native';
 import { NavigationService as NS, setTopLevelNavigator as sTLN } from './components';
 import Home from '../pages/home'
-import Profile from '../pages/profile'
-import Settings from '../pages/settings'
-
-import styles from './styles';
+import ProductDetails from '../pages/product'
 
 const Navigator = createAppContainer(
   createSwitchNavigator({
     Home: {
       screen: Home,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => <Image
-          source={Orders}
-          style={{ ...styles.icon, tintColor }}
-        />,
-      }),
+      navigationOptions: () => ({}),
     },
-    ProductNotAuth: {
-      screen: Profile,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => <Image
-          source={Profile}
-          style={{ ...styles.icon, tintColor }}
-        />,
-      }),
-    },
-    ProductAuth: {
-      screen: Settings,
-      navigationOptions: () => ({
-        tabBarIcon: ({ tintColor }) => <Image
-          source={Settings}
-          style={{ ...styles.icon, tintColor }}
-        />,
-      }),
+    ProductDetails: {
+      screen: ProductDetails,
+      navigationOptions: () => ({}),
     },
   },
   {

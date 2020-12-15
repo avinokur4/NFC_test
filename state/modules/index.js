@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import ordersFeed from './ordersFeed';
-import user from './user';
+import productDetails from './productDetails';
+import signIn from './signIn';
 
 export default combineReducers({
-  ordersFeed,
-  user,
+  productDetails,
+  signIn,
 });

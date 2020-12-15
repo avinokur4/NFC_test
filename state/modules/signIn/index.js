@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { USER_LOGIN, USER_PASS, USER_TOKEN } from '../../../storageKeys';
+import { TAG_UUID } from '../../../storageKeys';
 
 export const LOGOUT = 'signIn/LOGOUT';
 
@@ -7,27 +7,17 @@ export const LOGIN = 'signIn/LOGIN';
 export const LOGIN_SUCCESS = 'signIn/LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'signIn/LOGIN_FAIL';
 
-export const SILENT_LOGIN = 'signIn/SILENT_LOGIN';
-export const SILENT_LOGIN_SUCCESS = 'signIn/SILENT_LOGIN_SUCCESS';
-export const SILENT_LOGIN_FAIL = 'signIn/SILENT_LOGIN_FAIL';
-
 export const ADD_FORM_FIELD = 'signIn/ADD_FORM_FIELD';
 
 const initialState = {
   loading: false,
-  username: '',
-  mobile: '',
-  email: '',
-  password: '',
-  passwordConfirm: '',
+  tagUuid: '',
 };
 
 const actionHandlers = {
 
   async [LOGOUT](state) {
-    await AsyncStorage.removeItem(USER_TOKEN);
-    await AsyncStorage.removeItem(USER_LOGIN);
-    await AsyncStorage.removeItem(USER_PASS);
+    await AsyncStorage.removeItem(TAG_UUID);
     return {
       ...state,
       loading: false,
@@ -35,44 +25,24 @@ const actionHandlers = {
   },
 
   [LOGIN](state) {
+  console.log(LOGIN);
     return {
       ...state,
       loading: true,
     };
   },
   [LOGIN_SUCCESS](state, action) {
-    AsyncStorage.setItem(USER_TOKEN, action.payload.data.access_token);
+    console.log(LOGIN_SUCCESS);
+    AsyncStorage.setItem(TAG_UUID, action.payload.data.tagUuid);
     return {
       ...state,
+      tagUuid: action.payload.data.tagUuid,
       loading: false,
     };
   },
   [LOGIN_FAIL](state, action) {
-    AsyncStorage.removeItem(USER_TOKEN);
-    return {
-      ...state,
-      loading: false,
-      error: action.error,
-    };
-  },
-
-  [SILENT_LOGIN](state) {
-    return {
-      ...state,
-      loading: true,
-    };
-  },
-  async [SILENT_LOGIN_SUCCESS](state, action) {
-    await AsyncStorage.setItem(USER_TOKEN, action.payload.data.access_token);
-    return {
-      ...state,
-      loading: false,
-    };
-  },
-  async [SILENT_LOGIN_FAIL](state, action) {
-    await AsyncStorage.removeItem(USER_TOKEN);
-    await AsyncStorage.removeItem(USER_LOGIN);
-    await AsyncStorage.removeItem(USER_PASS);
+    console.log(LOGIN_FAIL);
+    AsyncStorage.removeItem(TAG_UUID);
     return {
       ...state,
       loading: false,
@@ -98,34 +68,3 @@ export default function reducer(state = initialState, action = {}) {
 
   return state;
 }
-
-export const login = user => ({
-  types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-  payload: {
-    request: {
-      method: 'post',
-      url: '/auth/token',
-      data: { login: user.login, password: user.password },
-    },
-  },
-});
-
-export const silentLogin = user => ({
-  types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
-  payload: {
-    request: {
-      method: 'post',
-      url: '/auth/token',
-      data: { login: user.login, password: user.password },
-    },
-  },
-});
-
-export const logout = () => ({
-  type: LOGOUT,
-});
-
-export const addFormField = payload => ({
-  type: ADD_FORM_FIELD,
-  payload,
-});
