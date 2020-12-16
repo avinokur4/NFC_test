@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Types } from '../../lib';
@@ -7,22 +7,23 @@ import NfcManager, { NfcEvents, Ndef } from 'react-native-nfc-manager';
 
 import styles from './styles';
 import { login } from '../../state/modules/signIn/actions';
+import { getProduct } from '../../state/modules/productDetails/actions';
 
 class Home extends Component {
 
   componentDidMount() {
     const { tagId, navigation, signIn } = this.props;
-    if(!!tagId){
-      navigation.push('ProductDetails');
+    console.log(`tagId ${tagId}`);
+    if (!!tagId) {
+      navigation.navigate('ProductDetails');
     }
-    
+
     NfcManager.start();
     NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
       console.warn('tag', tag);
       let uri = this._parseUri(tag);
-      navigation.push('ProductDetails');
-      signIn(uri);
-      
+      navigation.navigate('ProductDetails');
+      signIn('https://cloud.staging.genexir.selinko.com/x-9Jl16n7YRUbn9E');
 
       NfcManager.setAlertMessageIOS('I got your tag!');
       this._cancel();
@@ -35,18 +36,18 @@ class Home extends Component {
   }
 
   render() {
-    debugger;
     return (
       <SafeAreaView style={styles.content}>
-        <Text style={styles.title}>NFC Tech Demo</Text>
-
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Selinko Tech Demo</Text>
+        </View>
         <TouchableOpacity
           style={styles.button}
           onPress={this._test_read}
         >
           <Text>Authorize</Text>
         </TouchableOpacity>
-        
+
       </SafeAreaView>
     )
   }
@@ -67,11 +68,11 @@ class Home extends Component {
 
   _parseUri = (tag) => {
     try {
-        if (Ndef.isType(tag.ndefMessage[0], Ndef.TNF_WELL_KNOWN, Ndef.RTD_URI)) {
-            return Ndef.uri.decodePayload(tag.ndefMessage[0].payload);
-        }
+      if (Ndef.isType(tag.ndefMessage[0], Ndef.TNF_WELL_KNOWN, Ndef.RTD_URI)) {
+        return Ndef.uri.decodePayload(tag.ndefMessage[0].payload);
+      }
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
     return null;
   }
@@ -90,4 +91,7 @@ const mapStateToProps = ({ signIn }) => ({
   tagId: signIn.tagUuid,
 });
 
-export default connect(mapStateToProps, { signIn: login })(Home);
+export default connect(
+  mapStateToProps, 
+  { signIn: login, loadProduct: getProduct }
+)(Home);

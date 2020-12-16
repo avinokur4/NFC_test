@@ -2,28 +2,31 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 export default EStyleSheet.create({
   content: { 
-    padding: 20, 
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   
-  title:{
-    padding: 50,
+  titleContainer:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 
-  input: { 
-    height: 40, 
-    width: 200, 
-    borderColor: 'green', 
-    borderWidth: 1, 
-    margin: 50,
+  title:{
+    fontSize: 20,
   },
 
   button: { 
-    padding: 10, 
-    width: 200, 
+    height: 50,
+    paddingHorizontal: 80,
     margin: 12, 
     borderWidth: 1,
-    borderColor: 'black'
+    borderRadius: 8,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   text: {

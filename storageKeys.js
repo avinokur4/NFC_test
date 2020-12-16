@@ -1,1 +1,1 @@
-export const TAG_UUID = 'tag_uuid';
+export const USER_TOKEN = 'USER_TOKEN';

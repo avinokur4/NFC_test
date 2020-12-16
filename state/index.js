@@ -1,11 +1,11 @@
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 import { multiClientMiddleware } from 'redux-axios-middleware';
 import thunk from 'redux-thunk';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import reducer from './modules';
 import API from './api';
 import { silentLogin } from './modules/signIn';
-import { USER_LOGIN, USER_PASS, USER_TOKEN } from '../storageKeys';
+import { USER_TOKEN } from '../storageKeys';
 
 export default function createStore(preloadedState) {
   let INTERNET_RETRY_COUNTER = 0;
@@ -20,8 +20,11 @@ export default function createStore(preloadedState) {
   const interceptors = {
     request: [
       async ({ getState }, req) => {
-        const token = await AsyncStorage.getItem(USER_TOKEN);
-        return { ...req, headers: { Authorization: `Bearer ${token || ''}` } };
+        // const token = await AsyncStorage.getItem(USER_TOKEN);
+        return {
+           ...req, 
+          // headers: { Authorization: `Bearer ${token || ''}` } 
+        };
       }],
     response: [
       {
@@ -37,8 +40,6 @@ export default function createStore(preloadedState) {
           const { status } = error.response;
           if (status === 401 && INTERNET_RETRY_COUNTER < 3) {
             INTERNET_RETRY_COUNTER += 1;
-            const login = await AsyncStorage.getItem(USER_LOGIN);
-            const pass = await AsyncStorage.getItem(USER_PASS);
 
             if (login && pass) {
               return dispatch(silentLogin({ login, password: pass }))

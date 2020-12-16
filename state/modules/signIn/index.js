@@ -1,5 +1,5 @@
-import { AsyncStorage } from 'react-native';
-import { TAG_UUID } from '../../../storageKeys';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { USER_TOKEN } from '../../../storageKeys';
 
 export const LOGOUT = 'signIn/LOGOUT';
 
@@ -17,7 +17,7 @@ const initialState = {
 const actionHandlers = {
 
   async [LOGOUT](state) {
-    await AsyncStorage.removeItem(TAG_UUID);
+    await AsyncStorage.removeItem(USER_TOKEN);
     return {
       ...state,
       loading: false,
@@ -25,24 +25,22 @@ const actionHandlers = {
   },
 
   [LOGIN](state) {
-  console.log(LOGIN);
     return {
       ...state,
       loading: true,
     };
   },
   [LOGIN_SUCCESS](state, action) {
-    console.log(LOGIN_SUCCESS);
-    AsyncStorage.setItem(TAG_UUID, action.payload.data.tagUuid);
+    AsyncStorage.setItem(USER_TOKEN, action.payload.data.data);
+    console.log(action.payload.data.data);
     return {
       ...state,
-      tagUuid: action.payload.data.tagUuid,
+      tagUuid: action.payload.data.data,
       loading: false,
     };
   },
   [LOGIN_FAIL](state, action) {
-    console.log(LOGIN_FAIL);
-    AsyncStorage.removeItem(TAG_UUID);
+    AsyncStorage.removeItem(USER_TOKEN);
     return {
       ...state,
       loading: false,

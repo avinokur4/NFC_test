@@ -4,40 +4,25 @@ import { Dimensions } from 'react-native';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default EStyleSheet.create({
-  avatar: {
-    alignSelf: 'stretch',
-    alignItems: 'stretch',
-    height: 265,
+  container: {
+    margin: 12,
+    alignItems: 'center',
   },
-  dataContainer: {
-    marginHorizontal: 24,
+  title: {
+    fontSize: 20,
+    margin: 24,
   },
-  userInfo: {
-    backgroundColor: '$transparentGray',
-    width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    padding: 10,
+  image: {
+    width: SCREEN_WIDTH - 48,
+    height: SCREEN_WIDTH - 48,
+    resizeMode: 'contain',
   },
-  userName: {
-    paddingLeft: 34,
-    fontSize: '$H1Size',
-    color: '$white',
+  loading: {
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  ordersCount: {
-    paddingLeft: 34,
-    fontSize: '$fontMediumSize',
-    color: '$white',
-  },
-  relatStyle: {
-    position: 'relative',
-  },
-  rating: {
-    paddingLeft: '80%',
-    paddingTop: '5%',
-    position: 'absolute',
-    fontSize: '$H2_5Size',
-    color: '$white',
-  },
+  loadingText:{
+    fontSize: 20,
+    margin: 24,
+  }
 });

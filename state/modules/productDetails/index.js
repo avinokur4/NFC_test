@@ -4,7 +4,6 @@ export const LOAD_PRODUCT_FAIL = 'productDetails/LOAD_PRODUCT_FAIL';
 
 const initialState = {
   loading: false,
-  product: {},
 };
 
 const actionHandlers = {
@@ -12,7 +11,8 @@ const actionHandlers = {
     return { ...state, loading: true };
   },
   [LOAD_PRODUCT_SUCCESS](state, action) {
-    return { ...state, loading: false, product: action.payload.data };
+    console.log(`LOAD_PRODUCT_SUCCESS ${action.payload.data.data}`);
+    return { ...state, loading: false, product: action.payload.data.data };
   },
   [LOAD_PRODUCT_FAIL](state, action) {
     return { ...state, loading: false, error: action.error };
