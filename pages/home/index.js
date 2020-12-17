@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Types } from '../../lib';
-import NfcManager, {NfcEvents} from 'react-native-nfc-manager';
+import React from 'react';
+import { 
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import NfcManager, {Ndef, NfcTech} from 'react-native-nfc-manager';
 
-import styles from './styles';
+function buildUrlPayload(valueToWrite) {
+    return Ndef.encodeMessage([
+        Ndef.uriRecord(valueToWrite),
+    ]);
+}
 
-class Home extends Component {
+class Home extends React.Component {
   componentDidMount() {
     NfcManager.start();
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
-      console.warn('tag', tag);
-      NfcManager.setAlertMessageIOS('I got your tag!');
-      NfcManager.unregisterTagEvent().catch(() => 0);
-    });
   }
 
   componentWillUnmount() {
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-    NfcManager.unregisterTagEvent().catch(() => 0);
+    this._cleanUp();
   }
 
   render() {
@@ -28,14 +27,14 @@ class Home extends Component {
         <Text>NFC Demo</Text>
         <TouchableOpacity 
           style={{padding: 10, width: 200, margin: 20, borderWidth: 1, borderColor: 'black'}}
-          onPress={this._test}
+          onPress={this._testNdef}
         >
-          <Text>Test</Text>
+          <Text>Test Ndef</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={{padding: 10, width: 200, margin: 20, borderWidth: 1, borderColor: 'black'}}
-          onPress={this._cancel}
+          onPress={this._cleanUp}
         >
           <Text>Cancel Test</Text>
         </TouchableOpacity>
@@ -43,27 +42,26 @@ class Home extends Component {
     )
   }
 
-  _cancel = () => {
-    NfcManager.unregisterTagEvent().catch(() => 0);
+  _cleanUp = () => {
+    NfcManager.cancelTechnologyRequest().catch(() => 0);
   }
 
-  _test = async () => {
+  _testNdef = async () => {
     try {
-      await NfcManager.registerTagEvent();
+      let resp = await NfcManager.requestTechnology(NfcTech.Ndef, {
+        alertMessage: 'Ready to write some NFC tags!'
+      });
+      console.warn(resp);
+      let bytes = buildUrlPayload('https://cloud.staging.genexir.selinko.com/x-9Jl16n7YRUbn9E');
+      await NfcManager.writeNdefMessage(bytes);
+      console.warn('successfully write ndef');
+      await NfcManager.setAlertMessageIOS('I got your tag!');
+      this._cleanUp();
     } catch (ex) {
       console.warn('ex', ex);
-      NfcManager.unregisterTagEvent().catch(() => 0);
+      this._cleanUp();
     }
   }
 }
 
-Home.propTypes = {
-  navigation: Types.Navigation.isRequired,
-};
-
-Home.defaultProps = {
-};
-
-const mapStateToProps = ({ }) => ({});
-
-export default connect(mapStateToProps, {})(Home);
+export default Home;
