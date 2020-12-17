@@ -22,13 +22,13 @@ class Home extends Component {
       signIn(uri);
 
       NfcManager.setAlertMessageIOS('I got your tag!');
-      this._cancel();
+      this.cancel();
     });
   }
 
   componentWillUnmount() {
     NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-    this._cancel();
+    this.cancel();
   }
 
   render() {
@@ -39,24 +39,24 @@ class Home extends Component {
         </View>
         <Button
           text='Authorize'
-          onPress={()=>this._test_read()}
+          onPress={()=>this.test_read()}
         />
 
       </SafeAreaView>
     )
   }
 
-  _cancel = () => {
+  cancel = () => {
     NfcManager.unregisterTagEvent().catch(() => 0);
   }
 
-  _test_read = async () => {
+  test_read = async () => {
     try {
       await NfcManager.registerTagEvent();
     } catch (ex) {
       console.warn('ex', ex);
       this.setState({ ...this.state, error: ex });
-      this._cancel();
+      this.cancel();
     }
   }
 

@@ -1,4 +1,4 @@
-import { LOGIN, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, ADD_FORM_FIELD } from './index'
+import { LOGIN, LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT, ADD_FORM_FIELD } from './index';
 
 export const login = shortUrl => ({
   types: [LOGIN, LOGIN_SUCCESS, LOGIN_FAIL],
