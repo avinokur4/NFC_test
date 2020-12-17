@@ -4,7 +4,7 @@ import {
 } from 'react-navigation';
 import { NavigationService as NS, setTopLevelNavigator as sTLN } from './components';
 import Home from '../pages/home'
-import ProductDetails from '../pages/product'
+import Product from '../pages/product'
 
 const Navigator = createAppContainer(
   createSwitchNavigator({
@@ -12,14 +12,14 @@ const Navigator = createAppContainer(
       screen: Home,
       navigationOptions: () => ({}),
     },
-    ProductDetails: {
-      screen: ProductDetails,
+    Product: {
+      screen: Product,
       navigationOptions: () => ({}),
     },
   },
-  {
-    initialRouteName: 'Home',
-  }),
+    {
+      initialRouteName: 'Home',
+    }),
 );
 
 // this fixes HMR issue, see https://github.com/facebook/react-native/issues/22592

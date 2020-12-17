@@ -8,12 +8,13 @@ export default EStyleSheet.create({
     margin: 12,
     alignItems: 'center',
   },
-  centerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  centerContainerText:{
+  title: {
     fontSize: 20,
     margin: 24,
-  }
+  },
+  image: {
+    width: SCREEN_WIDTH - 48,
+    height: SCREEN_WIDTH - 48,
+    resizeMode: 'contain',
+  },
 });

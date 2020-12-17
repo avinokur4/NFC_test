@@ -4,52 +4,62 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Navigation } from '../../lib/types';
 import { getProduct } from '../../state/modules/productDetails/actions';
+import Button from '../../components/button';
+import jwt_decode from "jwt-decode";
+
 import styles from './styles';
-import Table from './components/table';
+import ProductDetails from './components/productDetails';
 
 
-const ProductDetails = ({ navigation, product, tagId, loadProduct }) => {
+const Product = ({ navigation, product, token, loadProduct }) => {
 
   useEffect(() => {
-    !product && loadProduct('x-9Jl16n7YRUbn9E');
+    if (token && !product) {
+      var decoded = jwt_decode(token);
+      loadProduct(decoded.data.tag_uuid);
+    }
   });
 
   return (
     <SafeAreaView style={styles.container}>
-      { product
-        ? <View style={styles.container}>
-          <Text numberOfLines={2}
-            ellipsizeMode='head'
-            style={styles.title}
-          >
-            {product.name}
-          </Text>
-          <Image
-            style={styles.image}
-            source={{
-              uri: product.product_image_url,
-            }}
+      {token
+        ? product
+          ? <ProductDetails
+            product={product}
           />
-          <Table datasheet={product.datasheet.data} />
-        </View>
-        : <View style={styles.loading}>
-            <Text style={styles.loadingText}>Loading...</Text>
+          : <View style={styles.centerContainer}>
+            <Text style={styles.centerContainerText}>Loading...</Text>
             <ActivityIndicator size="large" />
-        </View>}
+          </View>
+        : <View style={styles.centerContainer}>
+          <Text style={styles.centerContainerText}>Product not recognized</Text>
+          <Button
+            text='Back'
+            onPress={() => navigation.navigate('Home')}
+          />
+        </View>
+      }
     </SafeAreaView>
   );
 };
 
-ProductDetails.propTypes = {
+Product.propTypes = {
   navigation: Navigation.isRequired,
+  loadProduct: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  product: PropTypes.object
+};
+
+Product.defaultProps = {
+  product: undefined,
 };
 
 const mapStateToProps = ({ signIn, productDetails }) => ({
-  tagId: signIn.tagUuid,
+  token: signIn.token,
   product: productDetails.product,
   error: productDetails.error,
 });
 
 export default connect(
   mapStateToProps,
-  { loadProduct: getProduct })(ProductDetails);
+  { loadProduct: getProduct })(Product);

@@ -18,17 +18,6 @@ export default EStyleSheet.create({
     fontSize: 20,
   },
 
-  button: { 
-    height: 50,
-    paddingHorizontal: 80,
-    margin: 12, 
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   text: {
     textAlign: 'center',
     paddingHorizontal: 10,

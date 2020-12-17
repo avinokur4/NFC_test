@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Types } from '../../lib';
@@ -8,22 +8,18 @@ import NfcManager, { NfcEvents, Ndef } from 'react-native-nfc-manager';
 import styles from './styles';
 import { login } from '../../state/modules/signIn/actions';
 import { getProduct } from '../../state/modules/productDetails/actions';
+import Button from '../../components/button';
 
 class Home extends Component {
 
   componentDidMount() {
-    const { tagId, navigation, signIn } = this.props;
-    console.log(`tagId ${tagId}`);
-    if (!!tagId) {
-      navigation.navigate('ProductDetails');
-    }
+    const { navigation, signIn } = this.props;
 
     NfcManager.start();
     NfcManager.setEventListener(NfcEvents.DiscoverTag, tag => {
-      console.warn('tag', tag);
       let uri = this._parseUri(tag);
-      navigation.navigate('ProductDetails');
-      signIn('https://cloud.staging.genexir.selinko.com/x-9Jl16n7YRUbn9E');
+      navigation.navigate('Product');
+      signIn(uri);
 
       NfcManager.setAlertMessageIOS('I got your tag!');
       this._cancel();
@@ -41,12 +37,10 @@ class Home extends Component {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Selinko Tech Demo</Text>
         </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={this._test_read}
-        >
-          <Text>Authorize</Text>
-        </TouchableOpacity>
+        <Button
+          text='Authorize'
+          onPress={()=>this._test_read()}
+        />
 
       </SafeAreaView>
     )
@@ -72,7 +66,7 @@ class Home extends Component {
         return Ndef.uri.decodePayload(tag.ndefMessage[0].payload);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
     return null;
   }
@@ -84,14 +78,14 @@ Home.propTypes = {
 };
 
 Home.defaultProps = {
-  tagId: '',
+  token: '',
 };
 
 const mapStateToProps = ({ signIn }) => ({
-  tagId: signIn.tagUuid,
+  token: signIn.token,
 });
 
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   { signIn: login, loadProduct: getProduct }
 )(Home);

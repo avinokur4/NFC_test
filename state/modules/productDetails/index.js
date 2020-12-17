@@ -11,7 +11,6 @@ const actionHandlers = {
     return { ...state, loading: true };
   },
   [LOAD_PRODUCT_SUCCESS](state, action) {
-    console.log(`LOAD_PRODUCT_SUCCESS ${action.payload.data.data}`);
     return { ...state, loading: false, product: action.payload.data.data };
   },
   [LOAD_PRODUCT_FAIL](state, action) {
